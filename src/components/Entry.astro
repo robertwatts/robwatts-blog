@@ -1,0 +1,47 @@
+---
+import Entry from "../components/Entry.astro"
+import { config } from "../config";
+import { getContentTypeById } from "../content/utils";
+
+interface Props {
+  collectionEntry: CollectionEntry<"blog">;  
+}
+
+const { collectionEntry } = Astro.props;
+const contentType = getContentTypeById(collectionEntry.id);
+
+const showContent = ['note', 'bookmark', 'like', 'repost', 'reply', 'rsvp', 'event', 'checkin'].includes(contentType);
+const showSummary = !showContent && collectionEntry.data.summary;
+
+const { Content } = await collectionEntry.render();
+---
+<div class="h-entry">
+  <p class="content-type">
+    <span class="p-kind">{contentType}</span>
+  </p>
+
+  {collectionEntry.data.title && (
+    <h2 class="p-name">{collectionEntry.data.title}</h2>
+  )}
+
+  {showSummary && (
+    <div class="p-summary">
+      <p>{collectionEntry.data.summary}</p>
+    </div>
+  )}
+
+  {showContent && (
+    <div class="e-content">
+      <Content />
+    </div>
+  )}
+  <div class="post-meta">
+    <a class="u-url"></a>
+    by
+    <span class="p-author h-card">
+      <a class="p-name u-url" href={config.url}>
+        {config.author}
+      </a>
+    </span>
+  </div>
+</div>
