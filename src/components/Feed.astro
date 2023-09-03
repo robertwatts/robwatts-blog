@@ -1,14 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getBlogEntries } from "../content/utils";
 
 import Entry from "../components/Entry.astro"
 import { config } from "../config";
 
-const blogDirectoryRegex = /^.+\/.+\..+$/;
-
-const contentCollection = (await getCollection("blog", ({ id, data }) => {
-  return blogDirectoryRegex.test(id as string) && data.draft !== true;
-})).sort((a, b) => {
+const contentCollection = (await getBlogEntries()).sort((a, b) => {
   return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
 });
 ---

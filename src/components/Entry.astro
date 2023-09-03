@@ -1,6 +1,7 @@
 ---
-import Entry from "../components/Entry.astro"
+import type { CollectionEntry } from "astro:content";
 import { config } from "../config";
+import Author from "../components/author.astro";
 import { getContentTypeById } from "../content/utils";
 
 interface Props {
@@ -15,7 +16,7 @@ const showSummary = !showContent && collectionEntry.data.summary;
 
 const { Content } = await collectionEntry.render();
 ---
-<div class="h-entry">
+<article class="h-entry">
   <p class="content-type">
     <span class="p-kind">{contentType}</span>
   </p>
@@ -36,12 +37,8 @@ const { Content } = await collectionEntry.render();
     </div>
   )}
   <div class="post-meta">
-    <a class="u-url"></a>
+    <a class="u-uid u-url" href={`/posts/${collectionEntry.slug}`}>LINK</a>
     by
-    <span class="p-author h-card">
-      <a class="p-name u-url" href={config.url}>
-        {config.author}
-      </a>
-    </span>
+    <Author />
   </div>
 </div>
