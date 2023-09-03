@@ -1,44 +1,62 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { config } from "../config";
-import Author from "../components/author.astro";
-import { getContentTypeById } from "../content/utils";
+import { getContentType } from "../content/utils";
 
 interface Props {
+  feedMode: boolean;
   collectionEntry: CollectionEntry<"blog">;  
 }
 
-const { collectionEntry } = Astro.props;
-const contentType = getContentTypeById(collectionEntry.id);
+const { collectionEntry, feedMode = true } = Astro.props;
+const contentType = getContentType(collectionEntry);
 
-const showContent = ['note', 'bookmark', 'like', 'repost', 'reply', 'rsvp', 'event', 'checkin'].includes(contentType);
+const showContent = !feedMode || ['note', 'bookmark', 'like', 'repost', 'reply', 'rsvp', 'event', 'checkin'].includes(contentType);
 const showSummary = !showContent && collectionEntry.data.summary;
 
 const { Content } = await collectionEntry.render();
 ---
 <article class="h-entry">
-  <p class="content-type">
-    <span class="p-kind">{contentType}</span>
-  </p>
-
+  <section class="entry-type">
+    <a href={`/posts/${contentType.slug}`} class="p-category">
+      <Fragment set:html={contentType.iconSvg} />
+      {contentType.name}
+    </a>    
+  </section>
   {collectionEntry.data.title && (
-    <h2 class="p-name">{collectionEntry.data.title}</h2>
+    <h2 class="p-name">
+      {collectionEntry.data.title}
+    </h2>
   )}
 
   {showSummary && (
-    <div class="p-summary">
+    <section class="p-summary">
       <p>{collectionEntry.data.summary}</p>
-    </div>
+    </section>
   )}
 
   {showContent && (
-    <div class="e-content">
+    <section class="e-content">
       <Content />
-    </div>
+    </section>
   )}
-  <div class="post-meta">
+  <section class="post-meta">
     <a class="u-uid u-url" href={`/posts/${collectionEntry.slug}`}>LINK</a>
     by
-    <Author />
-  </div>
-</div>
+    <span class="h-card">
+      <img class="u-photo" src="/profile.png" alt={config.author+ "' profile image"}" loading="lazy"> 
+      <a class="p-name u-url" href={config.url}>{config.author}</a>
+    </span>
+  </section>
+</article>
+
+<style>
+  img.u-photo {
+    display:none;
+  }
+  .h-card .u-url::before {
+    content: "\f2b9";
+    font: normal normal normal 14px/1 FontAwesome;
+    margin-right: 3px;
+  }
+</style>

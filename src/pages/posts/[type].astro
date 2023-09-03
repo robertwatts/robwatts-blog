@@ -1,0 +1,21 @@
+---
+import ContentType from "../../content/config";
+import { getAvailableContentTypes } from "../../content/utils";
+import Feed from "../../components/Feed.astro";
+
+export async function getStaticPaths() {
+  const paths =  (await getAvailableContentTypes()).map(contentType => ({
+    params: { type: contentType.slug }, props: { contentType },
+  }));
+  console.log(paths);
+  return paths;
+};
+
+interface Props {
+  contentType: ContentType;
+}
+
+const { contentType } = Astro.props;
+---
+<h1>{contentType.name}</h1>
+<Feed />
