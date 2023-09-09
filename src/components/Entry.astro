@@ -1,14 +1,14 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { config } from "../config";
-import { getContentType } from "../content/utils";
+import { getContentType } from "../utils";
 
 interface Props {
   feedMode: boolean;
   collectionEntry: CollectionEntry<"blog">;  
 }
 
-const { collectionEntry, feedMode = true } = Astro.props;
+const { collectionEntry, feedMode = false } = Astro.props;
 const contentType = getContentType(collectionEntry);
 
 const showContent = !feedMode || ['note', 'bookmark', 'like', 'repost', 'reply', 'rsvp', 'event', 'checkin'].includes(contentType);
@@ -17,17 +17,22 @@ const showSummary = !showContent && collectionEntry.data.summary;
 const { Content } = await collectionEntry.render();
 ---
 <article class="h-entry">
-  <section class="entry-type">
-    <a href={`/posts/${contentType.slug}`} class="p-category">
-      <Fragment set:html={contentType.iconSvg} />
-      {contentType.name}
-    </a>    
-  </section>
-  {collectionEntry.data.title && (
+  {collectionEntry.data.title && !feedMode && (
+    <h1 class="p-name">
+      {collectionEntry.data.title}
+    </h1>
+  )}
+  {collectionEntry.data.title && feedMode && (
     <h2 class="p-name">
       {collectionEntry.data.title}
     </h2>
   )}
+  <section class="entry-type">
+    <a href={`/posts/${contentType.slug}`} class="p-category">
+      <Fragment set:html={contentType.iconSvg} />
+      <span class="entry-type-name">{contentType.name}</span>
+    </a>    
+  </section>
 
   {showSummary && (
     <section class="p-summary">
@@ -58,5 +63,8 @@ const { Content } = await collectionEntry.render();
     content: "\f2b9";
     font: normal normal normal 14px/1 FontAwesome;
     margin-right: 3px;
+  }
+  .entry-type {
+    line-height: 24px;
   }
 </style>

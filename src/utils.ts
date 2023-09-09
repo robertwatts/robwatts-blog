@@ -1,26 +1,13 @@
 import { CollectionEntry, getCollection } from 'astro:content';
-import { ContentType, contentTypesByFolder } from './config';
+import { ContentType, contentTypesByFolder } from './content/config';
 
 /**
  * Returns all entries in the blog content collection.
  * Regex is required to filter README.md from the collection.
  */
-export async function getBlogEntries(): Promise<CollectionEntry<"blog">[]> {
-  const blogDirectoryRegex = /^.+\/.+\..+$/;
+export async function getBlogEntries(contentType?: ContentType): Promise<CollectionEntry<"blog">[]> {
   const entries = await getCollection("blog", ({ id, data }) => {
-    return blogDirectoryRegex.test(id as string) && data.draft !== true;
-  });
-  return entries;
-}
-
-/**
- * Returns all entries in the blog content collection for a given content type.
- * @param contentType a ContentType
- * @returns all entries for that content type
- */
-export async function getBlogEntriesByContentType(contentType: ContentType): Promise<CollectionEntry<"blog">[]> {
-  const entries = await getCollection("blog", ({ id, data }) => {
-    return id.startsWith(contentType.slug) && data.draft !== true;
+    return (contentType ? id.startsWith(contentType.slug) : true) && data.draft !== true;
   });
   return entries;
 }
