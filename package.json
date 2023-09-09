@@ -11,5 +11,6 @@
   },
   "dependencies": {
     "astro": "^3.0.12"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }
