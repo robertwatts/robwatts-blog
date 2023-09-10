@@ -22,6 +22,7 @@ pnpm-debug.log*
 
 # Yarn 3 files
 .pnp.*
+.yarn
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
