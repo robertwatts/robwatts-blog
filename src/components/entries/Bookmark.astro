@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"blog">;  
+}
+
+const { entry } = Astro.props;
+
+const bookmarkedUrl = entry.data["bookmark-of"];
+if (bookmarkedUrl === undefined) {
+  throw new Error("bookmark-of is required");
+}
+
+const bookmarkedTitle = entry.data.title;
+const bookmarkedHost = new URL(bookmarkedUrl).host;
+---
+<div class="e-summary">
+  Bookmarked 
+  <a class="u-url" href={bookmarkedUrl}>{bookmarkedTitle}</a>
+  from 
+  <a class="p-author h-card" href={`https://${bookmarkedHost}`}>{bookmarkedHost}</a>
+</div>

@@ -1,9 +1,8 @@
 ---
 import { getBlogEntries } from "../utils";
-import { ContentType } from "../../content/config";
+import type { ContentType } from "../content/config";
 
 import Entry from "../components/Entry.astro"
-import { config } from "../config";
 
 interface Props {
   contentType?: ContentType;

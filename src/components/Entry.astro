@@ -2,6 +2,9 @@
 import type { CollectionEntry } from "astro:content";
 import { config } from "../config";
 import { getContentType } from "../utils";
+import Bookmark from "./entries/Bookmark.astro";
+import Note from "./entries/Note.astro";
+import Article from "./entries/Article.astro";
 
 interface Props {
   feedMode: boolean;
@@ -10,46 +13,39 @@ interface Props {
 
 const { collectionEntry, feedMode = false } = Astro.props;
 const contentType = getContentType(collectionEntry);
-
-const showContent = !feedMode || ['note', 'bookmark', 'like', 'repost', 'reply', 'rsvp', 'event', 'checkin'].includes(contentType);
-const showSummary = !showContent && collectionEntry.data.summary;
-
-const { Content } = await collectionEntry.render();
+const formattedDate = new Date(collectionEntry.data.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
 ---
 <article class="h-entry">
-  {collectionEntry.data.title && !feedMode && (
-    <h1 class="p-name">
-      {collectionEntry.data.title}
-    </h1>
-  )}
-  {collectionEntry.data.title && feedMode && (
-    <h2 class="p-name">
-      {collectionEntry.data.title}
-    </h2>
-  )}
-  <section class="entry-type">
-    <a href={`/posts/${contentType.slug}`} class="p-category">
+  {contentType && feedMode && (
+    <section class="entry-type">
+    <a href={`/posts/${contentType.path}`} class="p-category">
       <Fragment set:html={contentType.iconSvg} />
       <span class="entry-type-name">{contentType.name}</span>
     </a>    
-  </section>
-
-  {showSummary && (
-    <section class="p-summary">
-      <p>{collectionEntry.data.summary}</p>
     </section>
   )}
 
-  {showContent && (
-    <section class="e-content">
-      <Content />
-    </section>
+  {contentType && contentType.slug === 'bookmark' && (
+    <Bookmark entry={collectionEntry} />
   )}
+  {contentType && contentType.slug === 'note' && (
+    <Note entry={collectionEntry} />
+  )}
+  {contentType && contentType.slug === 'article' && (
+    <Article entry={collectionEntry} feedMode={feedMode} />
+  )}
+
   <section class="post-meta">
-    <a class="u-uid u-url" href={`/posts/${collectionEntry.slug}`}>LINK</a>
+    <a class="u-uid u-url" href={`/posts/${collectionEntry.slug}`}>
+      {formattedDate}
+    </a>
     by
     <span class="h-card">
-      <img class="u-photo" src="/profile.png" alt={config.author+ "' profile image"}" loading="lazy"> 
+      <img class="u-photo" src="/profile.png" alt={`${config.author} profile image`} loading="lazy" />
       <a class="p-name u-url" href={config.url}>{config.author}</a>
     </span>
   </section>
@@ -64,7 +60,17 @@ const { Content } = await collectionEntry.render();
     font: normal normal normal 14px/1 FontAwesome;
     margin-right: 3px;
   }
-  .entry-type {
-    line-height: 24px;
+  .entry-type a {
+    color: #999;
+  }
+  .entry-type a:hover {
+    color: #000;
+  }
+  .entry-type-name {
+    margin-left: 5px;
+  }
+  article {
+    margin-bottom: 2rem;
+    border-bottom-style: double;
   }
 </style>

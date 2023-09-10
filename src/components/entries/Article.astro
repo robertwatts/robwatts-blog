@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  feedMode: boolean;
+  entry: CollectionEntry<"blog">;  
+}
+
+const { entry, feedMode } = Astro.props;
+const { Content } = await entry.render();
+---
+{!feedMode && (
+  <h1 class="p-name">
+    {entry.data.title}
+  </h1>
+
+  <section class="e-content">
+    <Content />
+  </section>
+)}
+{feedMode && (
+  <strong>
+    <a class="p-name p-url" href={`/posts/${entry.slug}`}>
+      {entry.data.title}
+    </a>    
+  </strong>
+
+  <section class="p-summary">
+    <p>{entry.data.summary}</p>
+  </section>
+)}
+
+
+

@@ -1,12 +1,12 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { ContentType } from "../../content/config";
+import type { ContentType } from "../../content/config";
 import { getAvailableContentTypes } from "../../utils";
 import Feed from "../../components/Feed.astro";
 
 export async function getStaticPaths() {
   return (await getAvailableContentTypes()).map(contentType => ({
-    params: { type: contentType.slug }, props: { contentType },
+    params: { type: contentType.path }, props: { contentType },
   }));
 };
 
