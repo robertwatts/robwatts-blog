@@ -33,6 +33,11 @@ const socialImageURL = new URL(ogImage, Astro.site).href;
     <!-- water.css from https://watercss.kognise.dev so good! -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" />
 
+    <!-- Micropub -->
+    <link rel="authorization_endpoint" href="https://indiekit.robwatts.org/auth">
+    <link rel="token_endpoint" href="https://indiekit.robwatts.org/auth/token">
+    <link rel="micropub" href="https://indiekit.robwatts.org/micropub">
+
     <!-- General Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
