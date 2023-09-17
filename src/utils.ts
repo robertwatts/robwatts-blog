@@ -1,5 +1,5 @@
-import { CollectionEntry, getCollection } from 'astro:content';
-import { ContentType, contentTypesByFolder } from './content/config';
+import { type CollectionEntry, getCollection, getEntry } from 'astro:content';
+import { type ContentType, contentTypesByFolder } from './content/config';
 
 /**
  * Returns all entries in the blog content collection.
@@ -7,9 +7,27 @@ import { ContentType, contentTypesByFolder } from './content/config';
  */
 export async function getBlogEntries(contentType?: ContentType): Promise<CollectionEntry<"blog">[]> {
   const entries = await getCollection("blog", ({ id, data }) => {
-    return (contentType ? id.startsWith(contentType.slug) : true) && data.draft !== true;
+    return (
+      id !== 'README.md' && // filter out README.md
+      data.date !== undefined && // filter out entries without a date
+      data.draft !== true && // filter out drafts 
+      (contentType ? id.startsWith(contentType.slug) : true) // filter by content type, if provided
+    );
   });
   return entries;
+}
+
+/**
+ * Returns a single blog entry by id.
+ * @param id the id of the blog entry to return
+ * @returns 
+ */
+export async function getBlogEntry(id: string): Promise<CollectionEntry<"blog">> {
+  const entry = await getEntry("blog", id);
+  if (entry == undefined) {
+    throw new Error(`No blog entry found with id: ${id}`);
+  }
+  return entry;
 }
 
 /**

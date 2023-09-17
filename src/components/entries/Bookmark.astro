@@ -16,8 +16,10 @@ const bookmarkedTitle = entry.data.title;
 const bookmarkedHost = new URL(bookmarkedUrl).host;
 ---
 <div class="e-summary">
-  Bookmarked 
-  <a class="u-url" href={bookmarkedUrl}>{bookmarkedTitle}</a>
-  from 
-  <a class="p-author h-card" href={`https://${bookmarkedHost}`}>{bookmarkedHost}</a>
+  <p>
+    Bookmarked 
+    <a class="u-url" href={bookmarkedUrl}>{bookmarkedTitle}</a>
+    from 
+    <a class="p-author h-card" href={`https://${bookmarkedHost}`}>{bookmarkedHost}</a>
+  </p>
 </div>

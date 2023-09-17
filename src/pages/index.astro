@@ -1,19 +1,17 @@
 ---
+import type { CollectionEntry } from "astro:content";
+
 import Layout from "../layouts/Layout.astro"
 import Feed from "../components/Feed.astro"
----
 
+import { getBlogEntry } from "../utils";
+
+const homepageIntro = await getBlogEntry("homepage-intro");
+const { Content } = await homepageIntro.render();
+---
 <Layout>
 	<div class="intro">
-		<p>Hello. ✌🏻 Welcome to my personal site.</p>
-		<p>
-			I like building software in a team of people. I spend most of time doing this as CTO at <a href="https://www.wonderbly.com">Wonderbly</a>.
-		</p>
-		<p>
-			At Wonderbly try to help people share their love for each other through unique and beautiful books.
-			We're <a href="https://wonderbly.jobs.personio.com/">usually hiring.</a>
-		</p>
-		
+		<Content />
 	</div>
-	<Feed/>
+	<Feed />
 </Layout>

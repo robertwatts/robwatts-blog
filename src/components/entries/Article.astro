@@ -19,11 +19,13 @@ const { Content } = await entry.render();
   </section>
 )}
 {feedMode && (
-  <strong>
-    <a class="p-name p-url" href={`/posts/${entry.slug}`}>
-      {entry.data.title}
-    </a>    
-  </strong>
+  <p>
+    <strong>
+      <a class="p-name p-url" href={`/posts/${entry.slug}`}>
+        {entry.data.title}
+      </a>    
+    </strong>
+  </p>
 
   <section class="p-summary">
     <p>{entry.data.summary}</p>

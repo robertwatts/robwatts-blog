@@ -19,3 +19,11 @@ const contentCollection = (await getBlogEntries(contentType)).sort((a, b) => {
     <Entry feedMode={true} collectionEntry={collectionEntry} />
   ))}
 </div>
+
+<style>
+  .h-feed {
+    border-bottom-width: 2px;
+    border-top-style: dashed;
+    padding-top: 2rem;    
+  }
+</style>
